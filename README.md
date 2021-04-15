@@ -1,2 +1,8 @@
-# CloudStructure
-分享一些SpringCloud开发项目去分析项目结构
+# 简单的SpringCloud开发项目的项目结构
+
+
+如果你是位新手，想不到适合SpringCloud开发项目的项目结构
+
+那么我很建议你可以去看看别人的的开发项目
+
+这是我搜集到的一些SpringCloud的开发项目仅供参考分析
