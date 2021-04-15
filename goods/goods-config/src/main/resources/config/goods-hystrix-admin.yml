@@ -1,0 +1,57 @@
+spring: 
+ profiles: 
+  active: 
+  - dev
+#下面可以用---继续添加不同的环境，此文件的修改最终要git push到远程，或者直接在远程修改也行
+---
+server:
+  port: 8001
+
+mybatis:
+  type-aliases-package: com.goods.entity
+
+spring:
+  profiles: dev
+  application:
+    name: goods-hystrix-admin
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_goods?serverTimezone=UTC&characterEncoding=utf-8
+    username: root
+    password: root
+    initialSize: 5
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 'X'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 25
+
+eureka:
+  #注册到指定地址的eureka的服务器
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+    #自己定义一个别名,instance跟client对齐
+  instance:
+    instance-id: goods-hystrix-admin
+    #访问路径可以显示IP
+    prefer-ip-address: true
+#为了在服务监控页面点击链接，显示info信息,不属于eureka,在最前面
+info:
+  app:
+    name: goods
+  company:
+    name: www.abc.com
+  build:
+    artifactId: ${project.artifactId}
+    version: ${project.version}

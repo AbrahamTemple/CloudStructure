@@ -1,0 +1,28 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: goods-zuul #zuul也需要注册进Eureka
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+    instance-id: localhost
+    #访问路径可以显示IP
+    prefer-ip-address: true
+
+#zuul相关配置
+zuul:
+  ignored-services: "*"
+  routes:
+    goods:
+      #serviceId: GOODS-OPENFEIGN
+      url: http://localhost:8002/consumer/goods
+      path: /goods/**
+    users:
+      #serviceId: GOODS-OPENFEIGN
+      url: http://localhost:8002/consumer/users
+      path: /users/**
