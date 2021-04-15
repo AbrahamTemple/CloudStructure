@@ -1,0 +1,5 @@
+#注册到eureka上的名字
+spring:
+  application:
+    #服务的名称，到时候注册到Eureka可以看到
+    name: goods-hystrix-admin

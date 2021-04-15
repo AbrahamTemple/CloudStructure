@@ -1,0 +1,8 @@
+#此配置文件会先加载，它会去联系goods-config读取远程服务器上的配置
+spring:
+  cloud:
+    config:
+      name: goods-hystrix-admin #需要去远程库获取的配置文件名称，不要yml
+      profile: dev #使用的配置项,相当于是获取远程的dev配置，也可以改成test
+      label: master
+      uri: http://localhost:3344 #先去找3344号服务，通过SpringCloudConfig去

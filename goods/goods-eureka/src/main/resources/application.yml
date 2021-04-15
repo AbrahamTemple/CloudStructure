@@ -1,0 +1,16 @@
+server:
+  port: 7001
+
+eureka:
+  instance:
+    #eureka服务器端的实例名
+    hostname: localhost
+  client:
+    #表示不向注册中心注册自己
+    register-with-eurake: false
+    #表示自己端就是注册中心，职责就是维护服务实例，不需要去检索服务
+    fetch-registry: false
+    service-url:
+      #查询服务，和注册服务，都是通过下面的地址
+      #设置查询服务和注册服务的地址,如果是单机，就写自己，如果是集群就写其他，相互注册
+      defaultZone: http://localhost:7001/eureka/

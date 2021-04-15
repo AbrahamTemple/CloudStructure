@@ -1,0 +1,30 @@
+server:
+ port: 8002
+
+#注册到eureka上的名字
+spring:
+ application:
+  #服务的名称，到时候注册到Eureka可以看到
+  name: goods-openfeign
+  #允许多个同名的@Feignclient
+ main:
+   allow-bean-definition-overriding: true
+eureka:
+  #注册到指定地址的eureka的服务器
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+    #自己定义一个别名,instance跟client对齐
+  instance:
+    instance-id: goods-openfeign
+    #访问路径可以显示IP
+    prefer-ip-address: true
+#为了在服务监控页面点击链接，显示info信息,不属于eureka,在最前面
+info:
+  app:
+    name: goods-openfeign
+  company:
+    name: www.abc.com
+  build:
+    artifactId: ${project.artifactId}
+    version: ${project.version}
