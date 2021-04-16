@@ -1,0 +1,88 @@
+<!-- user表单弹窗 -->
+<form id="order-form" lay-filter="order-form" class="layui-form model-form">
+    <input name="id" type="hidden"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单编号</label>
+        <div class="layui-input-block">
+            <input name="orderNum" placeholder="请输入订单编号" type="text" class="layui-input" maxlength="20"
+                   lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单价格</label>
+        <div class="layui-input-block">
+            <input name="price" placeholder="请输入订单价格" type="text" class="layui-input" maxlength="20"
+                   lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">收货人</label>
+        <div class="layui-input-block">
+            <input name="consignee" placeholder="收货人" type="text" class="layui-input" maxlength="20"
+                   required/>
+        </div>
+    </div>
+	<div class="layui-form-item">
+	    <label class="layui-form-label">收货人电话</label>
+	    <div class="layui-input-block">
+	        <input name="consigneePhone" placeholder="收货人电话" type="text" class="layui-input" maxlength="20"
+	               required/>
+	    </div>
+	</div>
+	<div class="layui-form-item">
+	    <label class="layui-form-label">状态</label>
+	    <div class="layui-input-block">
+	        <input name="status" placeholder="状态" type="text" class="layui-input" maxlength="20"
+	               required/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item">
+	    <label class="layui-form-label">订单时间(yyyy-MM-dd)</label>
+	    <div class="layui-input-block">
+	        <input name="orderTimeStr" placeholder="请输入订单时间" type="text" class="layui-input" maxlength="20"
+	               required/>
+	    </div>
+	</div>
+
+
+    <div class="layui-form-item model-form-footer">
+        <button class="layui-btn layui-btn-primary" ew-event="closeDialog" type="button">取消</button>
+        <button class="layui-btn" lay-filter="user-form-submit" lay-submit>保存</button>
+    </div>
+</form>
+
+<script>
+    layui.use(['layer', 'admin', 'form', 'formSelects'], function () {
+        var layer = layui.layer;
+        var admin = layui.admin;
+        var form = layui.form;
+        var formSelects = layui.formSelects;
+
+        // form.render('radio');
+
+		var menus = admin.getTempData('t_order');
+		$('#order-form').attr('method', 'POST');
+		if (menus) {
+		    form.val('order-form', menus);
+		    changeType(menus.type);
+		}
+		form.render();  //菜单渲染 把内容加载进去
+
+
+        // 表单提交事件
+        form.on('submit(user-form-submit)', function (data) {
+            layer.load(2);
+            admin.req('api-user/er', JSON.stringify(data.field), function (data) {
+                layer.closeAll('loading');
+                if (data.resp_code == 0) {
+                    layer.msg(data.resp_msg, {icon: 1, time: 500});
+                    admin.finishPopupCenter();
+                } else {
+                    layer.msg(data.resp_msg, {icon: 2, time: 500});
+                }
+            }, "POST");
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,156 @@
+<div class="layui-card">
+    <div class="layui-card-header">
+        <h2 class="header-title">商品</h2>
+        <span class="layui-breadcrumb pull-right">
+          <a href="#!console">首页</a>
+          <a><cite>商品</cite></a>
+        </span>
+    </div>
+    <div class="layui-card-body">
+        <div class="layui-form toolbar">
+            搜索：
+            <select id="user-search-key">
+                <option value="">-请选择-</option>
+                <option value="name">商品名称</option>
+                <option value="shop">店铺</option>
+                <option value="type">类型</option>
+            </select>&emsp;
+            <input id="user-search-value" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
+            <button id="user-btn-search" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+            <button id="good-add" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+
+        </div>
+
+        <table class="layui-table" id="good-table" lay-filter="good-table"></table>
+    </div>
+</div>
+
+
+<!-- 表格操作列 -->
+<script type="text/html" id="good-table-bar">
+    <!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit" >修改</a> -->
+	<a class="layui-btn layui-btn-xs" lay-event="diancan" >点餐</a>
+    <a class="layui-btn layui-btn-xs" lay-event="del" >删除</a>
+</script>
+
+
+<script>
+    layui.use(['form', 'table', 'util', 'config', 'admin', 'upload'], function () {
+        var form = layui.form;
+        var table = layui.table;
+        var config = layui.config;
+        var layer = layui.layer;
+        var util = layui.util;
+        var admin = layui.admin;
+        //上传
+        var upload = layui.upload;
+
+        // 渲染表格
+        table.render({
+            elem: '#good-table',
+            url: config.base_server + 'api-user/d',
+            method: 'GET',
+            headers:{'Authorization': 'Bearer ' + config.getToken().access_token},
+            page: true,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'id', sort: true, title: '编号'},
+                {field: 'shop', sort: true, title: '店铺'},
+                {field: 'type', sort: true, title: '类型'},
+                {field: 'name', sort: true, title: '名称'},
+				{field: 'price', sort: true, title: '价格'},
+				{field: 'introduce', sort: true, title: '介绍'},
+				{field: 'manufactor', sort: true, title: '厂家'},
+				{field: 'comment', sort: true, title: '评论'},
+                {
+                    sort: true, templet: function (d) {
+                        return util.toDateString(d.createTime);
+                    }, title: '创建时间'
+                },
+				{
+				    sort: true, templet: function (d) {
+				        return util.toDateString(d.productTime);
+				    }, title: '生产时间'
+				},
+                {fixed: 'right', align: 'center', toolbar: '#good-table-bar', title: '操作', width: 175}
+            ]]
+        });
+
+        // 添加按钮点击事件
+        $('#good-add').click(function () {
+            showEditModel();
+        });
+
+        // 工具条点击事件
+        table.on('tool(good-table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            }  else if (layEvent === 'del') { // 删除
+                layer.confirm('确定删除此吗？', function (i) {
+                    layer.close(i);
+                    layer.load(2);
+                    admin.req('api-user/d/'+obj.data.id, {}, function (data) {
+                        layer.closeAll('loading');
+                        if (data.resp_code == 0) {
+                            layer.msg(data.resp_msg, {icon: 1, time: 500});
+                            table.reload('good-table', {});
+                        } else {
+                            layer.msg(data.resp_msg, {icon: 2, time: 500});
+                        }
+                    }, 'delete');
+                });
+            }else if (layEvent === 'diancan') {
+				console.log('点餐啊')
+				layer.confirm('确定点餐吗？', function (i) {
+				    layer.close(i);
+				    layer.load(2);
+				    admin.req('api-user/d/diancan?myname='+obj.data.name+'&myprice='+obj.data.price, {}, function (data) {
+				        layer.closeAll('loading');
+				        if (data.resp_code == 0) {
+				            layer.msg(data.resp_msg, {icon: 1, time: 500});
+				            table.reload('good-table', {});
+				        } else {
+				            layer.msg(data.resp_msg, {icon: 2, time: 500});
+				        }
+				    }, 'get');
+				});
+			}
+        });
+
+        //显示表单弹窗
+        var showEditModel = function (data) {
+
+            admin.putTempData('t_good', data);
+            var title = data ? '修改商品' : '添加商品';
+            admin.popupCenter({
+                title: title,
+                path: 'pages/good/good_form.html',
+                finish: function () {
+                    table.reload('good-table', {});
+                }
+            });
+        };
+
+        // 搜索按钮点击事件
+        $('#user-btn-search').click(function () {
+            var key = $('#user-search-key').val();
+            var value = $('#user-search-value').val();
+            table.reload('good-table', {where: {searchKey: key, searchValue: value}});
+        });
+
+
+        //判断权限，没有权限则隐藏按钮
+        let resList = ['good-add','good-delete','diancan'];
+        for(let i = 0; i < resList.length; i++){
+            if (!admin.hasPerm(resList[i])) {
+				var t= admin.hasPerm(resList[i])
+				console.log(t)
+				console.log('#'+resList[i])
+                $('#'+resList[i]).hide();
+            }
+        }
+    });
+</script>
