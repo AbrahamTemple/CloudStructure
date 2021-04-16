@@ -1,0 +1,38 @@
+{
+  "groups": [
+    {
+      "name": "zlt.swagger-agg",
+      "type": "com.central.gateway.swagger.SwaggerAggProperties",
+      "sourceType": "com.central.gateway.swagger.SwaggerAggProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "zlt.swagger-agg.api-docs-path",
+      "type": "java.lang.String",
+      "description": "Swagger返回JSON文档的接口路径（全局配置）",
+      "sourceType": "com.central.gateway.swagger.SwaggerAggProperties",
+      "defaultValue": "\/v2\/api-docs"
+    },
+    {
+      "name": "zlt.swagger-agg.generate-routes",
+      "type": "java.util.Set<java.lang.String>",
+      "description": "自动生成文档的路由名称，设置了generateRoutes之后，ignoreRoutes不生效",
+      "sourceType": "com.central.gateway.swagger.SwaggerAggProperties"
+    },
+    {
+      "name": "zlt.swagger-agg.ignore-routes",
+      "type": "java.util.Set<java.lang.String>",
+      "description": "不自动生成文档的路由名称，设置了generateRoutes之后，本配置不生效",
+      "sourceType": "com.central.gateway.swagger.SwaggerAggProperties"
+    },
+    {
+      "name": "zlt.swagger-agg.swagger-version",
+      "type": "java.lang.String",
+      "description": "Swagger文档版本（全局配置）",
+      "sourceType": "com.central.gateway.swagger.SwaggerAggProperties",
+      "defaultValue": "2.0"
+    }
+  ],
+  "hints": []
+}
