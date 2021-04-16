@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.central.user.mapper.DMapper">
+    <sql id="where">
+        <where>
+            <if test="u.shop != null and u.shop != ''">
+                and t.shop like concat('%', #{u.shop}, '%')
+            </if>
+            <if test="u.type != null and u.type != ''">
+                and t.type like concat('%', #{u.type}, '%')
+            </if>
+            <if test="u.name != null and u.name != ''">
+                and t.name like concat('%', #{u.name}, '%')
+            </if>
+
+        </where>
+    </sql>
+
+    <select id="findList" resultType="com.central.user.model.D">
+        select * from food t
+        <include refid="where" />
+    </select>
+</mapper>
